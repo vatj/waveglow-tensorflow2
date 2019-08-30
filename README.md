@@ -7,27 +7,27 @@ Custom implementation of the [Nvidia WaveGlow model by Prender et al.](https://a
 Download repository. Create a virtualenv and install the required packages. Create default directories:
 
 ```shell
-git clone blabla
-cd blabla
+git clone git@github.com:vatj/waveglow-tensorflow2.git
+cd waveglow-tensorflow2
 python3 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
-mkdir data logs checkpoints
+mkdir data logs checkpoints data/float16 data/float32 logs/test
 ```
 
 Set a path to dowload the LJSpeech Dataset in the scripts/hparams.py configuration file by modifying the data_dir entry and the floating point precision to use for training by editing the ftype entry. Run data preprocessing script (alternatively, one can run the full notebook in jupyter). Note that preprocessing will need to be run again to train with a different float type. Run the training script.
 
 ```shell
-python -m scripts/data_preprocess.py
-python -m scripts/training.py
+python -m scripts/raw_ljspeech_to_tfrecords.py
+python -m scripts/training_main.py
 ```
 
 Use tensorboard in a notebook to monitor training or run tensorboard directly from the command line
 
 ```shell
-jupyter-notebook notebooks/tensorboard.ipynb
+jupyter-notebook notebooks/control_tensorboard.ipynb
 # or
-tensorboard --log-dir ./logs
+tensorboard --log-dir ./logs/test
 ```
 
 ## TODOS
@@ -36,7 +36,6 @@ tensorboard --log-dir ./logs
 - [ ] Fixing half-precision issues. It seems like computing determinant in half precision is unstable in current implementation.
 - [ ] Add metric to the training loop e.g. mean loss over epoch
 - [ ] Add a notebook with a couple of iteration to enable profiling and graph of the train step autograph
-- [ ] Hyperparameters need to be commented further
 - [ ] Train the model and add link to audio samples
 
 ## Supported
@@ -70,6 +69,7 @@ tensorboard --log-dir ./logs
 
 
 ### Hyper Parameters :
-- [x] Focus on implementation of the hparams['ftype'] = tf.float16. Nvidia V100 reaches 125 TFLOPS instead of 15 with tf.float32
+- [x] Focus on implementation of the hparams['ftype'] = tf.float16. Nvidia V100 theoretically reaches 125 TFLOPS instead of 15 with tf.float32
+- [x] Hyperparameters need to be commented further
 
 
