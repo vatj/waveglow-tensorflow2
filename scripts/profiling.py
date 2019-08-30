@@ -41,7 +41,7 @@ import training_utils as utils
 # In[5]:
 
 
-log_dir = hparams['log_dir'] + 'test/weight_norm'
+log_dir = hparams['log_dir'] + 'test/profiler'
 file_writer = tf.summary.create_file_writer(log_dir)
 file_writer.set_as_default()
 

@@ -79,7 +79,7 @@ hparams['fmax'] = 8000.0
 # Floating precision. Float16 is not supported on cpus
 hparams['ftype'] = tf.float32
 # Batch size for training
-hparams['train_batch_size'] = 24
+hparams['train_batch_size'] = 2
 # Learning rate, set to range(1e-3, 1e-4) for Adam and 1.0 for AdaDelta. Learning rate scheduler not supported yet
 hparams['learning_rate'] = 3e-4
 # Number of epochs to iterate over. Might be replaced by a number of training step in the future

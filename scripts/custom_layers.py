@@ -100,7 +100,10 @@ class Invertible1x1Conv(layers.Layer):
 
 
 class Inv1x1Conv(layers.Conv1D):
-  
+  """
+  Tensorflow 2.0 implementation of the inv1x1conv layer 
+  directly subclassing the tensorflow Conv1D layer
+  """
   
   def __init__(self, filters, **kwargs):
     super(Inv1x1Conv, self).__init__(
@@ -202,8 +205,6 @@ class WaveNetNvidia(layers.Layer):
                                  name="cond_{}".format(index))
       self.cond_layers.append(cond_layer)
       
-      # Nvidia says "last one is not necessary". 
-      # Not sure what it entails or why
       if index < self.n_layers - 1:
         res_skip_channels = 2 * self.n_channels
       else:
@@ -257,7 +258,6 @@ class WaveNetNvidia(layers.Layer):
     output = self.end(output)
     
     log_s, bias = tf.split(output, 2, axis=2)
-    
     
     return output
   
