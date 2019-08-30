@@ -6,7 +6,7 @@
 # ## Boilerplate
 # Start with standard imports as well as adding the scripts directory to the system path to allow custom imports.
 
-# In[1]:
+# In[3]:
 
 
 import tensorflow as tf
@@ -41,6 +41,7 @@ from hparams import hparams
 class Invertible1x1Conv(layers.Layer):
   """
   Tensorflow 2.0 implementation of the inv1x1conv layer
+  Deprecated
   """
   
   def __init__(self, filters, **kwargs):
@@ -171,38 +172,39 @@ class WaveNetNvidia(layers.Layer):
     self.res_skip_layers = []
     self.cond_layers = []
     
-    self.start = layers.Conv1D(filters=self.n_channels,
-                               kernel_size=1,
-                               dtype=self.dtype,
-                               name="start")
+    self.start = tfa.layers.wrappers.WeightNormalization(
+      layers.Conv1D(filters=self.n_channels,
+                    kernel_size=1,
+                    dtype=self.dtype,
+                    name="start"))
 
-    self.end = layers.Conv1D(
-      filters=2 * self.n_in_channels,
-      kernel_size = 1,
-      kernel_initializer=tf.initializers.zeros(),
-      bias_initializer=tf.initializers.zeros(),
-      dtype=self.dtype,
-      name="end")
+    self.end = tfa.layers.wrappers.WeightNormalization(
+      layers.Conv1D(filters=2 * self.n_in_channels,
+                    kernel_size = 1,
+                    kernel_initializer=tf.initializers.zeros(),
+                    bias_initializer=tf.initializers.zeros(),
+                    dtype=self.dtype,
+                    name="end"))
 
     for index in range(self.n_layers):
       dilation_rate = 2 ** index
-      in_layer = layers.Conv1D(filters=2 * self.n_channels,
-                               kernel_size= self.kernel_size,
-                               dilation_rate=dilation_rate,
-                               padding="SAME",
-                               dtype=self.dtype,
-                               name="conv1D_{}".format(index))
-      # Nvidia has a weight_norm func here, training stability?
-      # Not sure how to implement similar behaviour in tensorflow
-      # See https://github.com/tensorflow/addons/blob/master/tensorflow_addons/layers/wrappers.py
+      
+      in_layer = tfa.layers.wrappers.WeightNormalization(
+        layers.Conv1D(filters=2 * self.n_channels,
+                      kernel_size= self.kernel_size,
+                      dilation_rate=dilation_rate,
+                      padding="SAME",
+                      dtype=self.dtype,
+                      name="conv1D_{}".format(index)))    
       self.in_layers.append(in_layer)
       
       
-      cond_layer = layers.Conv1D(filters = 2 * self.n_channels,
-                                 kernel_size = 1,
-                                 padding="SAME",
-                                 dtype=self.dtype,
-                                 name="cond_{}".format(index))
+      cond_layer = tfa.layers.wrappers.WeightNormalization(
+        layers.Conv1D(filters = 2 * self.n_channels,
+                      kernel_size = 1,
+                      padding="SAME",
+                      dtype=self.dtype,
+                      name="cond_{}".format(index)))
       self.cond_layers.append(cond_layer)
       
       if index < self.n_layers - 1:
@@ -210,11 +212,12 @@ class WaveNetNvidia(layers.Layer):
       else:
         res_skip_channels = self.n_channels
         
-      res_skip_layer = layers.Conv1D(
-        filters=res_skip_channels,
-        kernel_size=1,
-        dtype=self.dtype,
-        name="res_skip_{}".format(index))
+      res_skip_layer = tfa.layers.wrappers.WeightNormalization(
+        layers.Conv1D(
+          filters=res_skip_channels,
+          kernel_size=1,
+          dtype=self.dtype,
+          name="res_skip_{}".format(index)))
       
       self.res_skip_layers.append(res_skip_layer)
       
@@ -403,6 +406,8 @@ class WeightNormalization(tf.keras.layers.Wrapper):
       ValueError: If not initialized with a `Layer` instance.
       ValueError: If `Layer` does not contain a `kernel` of weights
       NotImplementedError: If `data_init` is True and running graph execution
+      
+      Deprecated
     """
 
     def __init__(self, layer, data_init=True, **kwargs):
@@ -562,10 +567,4 @@ class Inv1x1ConvWeightNorm(layers.Conv1D):
         
       return tf.nn.conv1d(inputs, self.kernel_inverse, 
                             stride=1, padding='SAME')
-
-
-# In[ ]:
-
-
-
 

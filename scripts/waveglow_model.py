@@ -47,7 +47,7 @@ class WaveGlow(tf.keras.Model):
     self.n_early_every = hparams['n_early_every']
     self.n_early_size = hparams['n_early_size']
     self.upsampling_size = hparams['upsampling_size']
-    self.hidden_channels = hparams['hidden_channels']
+#     self.hidden_channels = hparams['hidden_channels']
     self.mel_channels = hparams['mel_channels']
     self.hparams = hparams
     self.normalisation = self.hparams['train_batch_size'] * self.hparams['segment_length']
@@ -68,23 +68,31 @@ class WaveGlow(tf.keras.Model):
         n_half -= self.n_early_size // 2
         n_remaining_channels -= self.n_early_size
         
-      self.convinvLayers.append(
-        Invertible1x1Conv(
-          filters=n_remaining_channels,
-          dtype = hparams['ftype'],
-          name = "inv1x1conv_{}".format(index)))
+#       self.convinvLayers.append(
+#         Invertible1x1Conv(
+#           filters=n_remaining_channels,
+#           dtype = hparams['ftype'],
+#           name = "inv1x1conv_{}".format(index)))
       
-      self.inv1x1ConvLayers.append(
-          Inv1x1Conv(
-            filters=n_remaining_channels,
-            dtype=hparams['ftype'],
-            name="newInv1x1conv_{}".format(index)))
+#       self.inv1x1ConvLayers.append(
+#           Inv1x1Conv(
+#             filters=n_remaining_channels,
+#             dtype=hparams['ftype'],
+#             name="newInv1x1conv_{}".format(index)))
       
       self.weightNormInv1x1ConvLayers.append(
         Inv1x1ConvWeightNorm(
           filters=n_remaining_channels,
           dtype=hparams["ftype"],
           name="weightInv1x1conv_{}".format(index)))
+      
+      # Standard wrapper
+#       self.weightNormInv1x1ConvLayers.append(
+#         tfa.layers.wrappers.WeightNormalization(
+#           Inv1x1Conv(
+#             filters=n_remaining_channels,
+#             dtype=hparams["ftype"],
+#             name="weightInv1x1conv_{}".format(index))))
       
       self.batchNormalisationLayers.append(
         layers.BatchNormalization())

@@ -41,7 +41,7 @@ import training_utils as utils
 # In[5]:
 
 
-log_dir = hparams['log_dir'] + 'test/weight_norm'
+log_dir = hparams['log_dir'] + 'test/weight_norm2'
 file_writer = tf.summary.create_file_writer(log_dir)
 file_writer.set_as_default()
 
@@ -52,21 +52,22 @@ file_writer.set_as_default()
 
 
 validation_dataset = utils.load_single_file_tfrecords(
-  record_file=hparams['tfrecords_dir'] + hparams['eval_file'])
+  record_file= os.path.join(hparams['tfrecords_dir'], 
+                            hparams['eval_file']))
 validation_dataset = validation_dataset.batch(
   hparams['train_batch_size'])
 
 
-# In[7]:
+# In[8]:
 
 
 training_dataset = utils.load_training_files_tfrecords(
-  record_pattern=hparams['tfrecords_dir'] + hparams['train_files'] + '*')
+  record_pattern=os.path.join(hparams['tfrecords_dir'], hparams['train_files'] + '*'))
 
 
 # ## Instantiate model and optimizer
 
-# In[8]:
+# In[9]:
 
 
 myWaveGlow = WaveGlow(hparams=hparams, name='myWaveGlow')
@@ -76,7 +77,7 @@ optimizer = utils.get_optimizer(hparams=hparams)
 
 # ## Model Checkpoints : Initialise or Restore
 
-# In[9]:
+# In[10]:
 
 
 checkpoint = tf.train.Checkpoint(step=tf.Variable(0), 
@@ -103,7 +104,7 @@ else:
 
 # ## Training step autograph
 
-# In[10]:
+# In[11]:
 
 
 @tf.function
@@ -119,7 +120,7 @@ def train_step(step, x_train, waveGlow, hparams, optimizer):
                                 myWaveGlow.trainable_weights))
 
 
-# In[11]:
+# In[12]:
 
 
 def custom_training(waveGlow, hparams, optimizer, 
