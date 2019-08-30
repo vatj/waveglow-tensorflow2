@@ -17,8 +17,8 @@ scripts/.ipynb_checkpoints
 venv
 
 # Ignore hparams notebook and scripts to avoid complication between Wilkes and Google Cloud
-notebooks/hparams.ipynb
-scripts/hparams.py
+# notebooks/hparams.ipynb
+# scripts/hparams.py
 
 # Ignore Wilkes specific files
 Wilkes
