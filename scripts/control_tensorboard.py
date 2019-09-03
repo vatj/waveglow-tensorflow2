@@ -1,50 +1,50 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[ ]:
+# In[1]:
 
 
 import tensorflow as tf
 
 
-# In[ ]:
+# In[2]:
 
 
 import os, sys
 root_dir, _ = os.path.split(os.getcwd())
 script_dir = os.path.join(root_dir, 'scripts')
 sys.path.append(script_dir)
-import hparams
+from hparams import hparams
 
 
-# In[ ]:
+# In[3]:
 
 
 get_ipython().run_line_magic('load_ext', 'tensorboard')
 
 
-# In[ ]:
+# In[4]:
 
 
 from tensorboard import notebook
 
 
-# In[ ]:
+# In[5]:
 
 
 notebook.list()
 
 
-# In[ ]:
+# In[6]:
 
 
-# %tensorboard --logdir ../logs/functional_test/ --port=6006
+log_dir = os.path.join(hparams['log_dir'], 'test')
 
 
-# In[ ]:
+# In[7]:
 
 
-get_ipython().run_line_magic('tensorboard', '--logdir ../logs/test --port=6062')
+get_ipython().run_line_magic('tensorboard', '--logdir $log_dir --port=6081')
 
 
 # In[ ]:

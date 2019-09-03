@@ -71,8 +71,8 @@ class WaveGlow(tf.keras.Model):
       self.convinvLayers.append(
         Invertible1x1Conv(
           filters=n_remaining_channels,
-          dtype = hparams['ftype'],
-          name = "inv1x1conv_{}".format(index)))
+          dtype=hparams['ftype'],
+          name="inv1x1conv_{}".format(index)))
       
       self.inv1x1ConvLayers.append(
           Inv1x1Conv(

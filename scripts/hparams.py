@@ -32,6 +32,8 @@ hparams['n_early_size'] = 2
 hparams['upsampling_size'] = 256 
 # Gaussian mixture standard deviation
 hparams['sigma'] = 1.0
+# Hidden Channels
+hparams["hidden_channels"] = 256
 
 
 # ## Wavenet Parameters
@@ -77,9 +79,9 @@ hparams['fmax'] = 8000.0
 
 
 # Floating precision. Float16 is not supported on cpus
-hparams['ftype'] = tf.float32
+hparams['ftype'] = tf.float16
 # Batch size for training
-hparams['train_batch_size'] = 2
+hparams['train_batch_size'] = 12
 # Learning rate, set to range(1e-3, 1e-4) for Adam and 1.0 for AdaDelta. Learning rate scheduler not supported yet
 hparams['learning_rate'] = 3e-4
 # Number of epochs to iterate over. Might be replaced by a number of training step in the future
@@ -129,11 +131,11 @@ hparams['test_file'] = 'ljs_test.tfrecords'
 # Raw data directory
 hparams['data_dir'] = "/home/jupyter/.keras/datasets/LJSpeech-1.1"
 # Tfrecords directory. Use different directories for float32 and float16 to avoid rerun of preprocessing
-hparams['tfrecords_dir'] = "/home/jupyter/waveglowTensorflow2/data/float16/"
+hparams['tfrecords_dir'] = "/home/jupyter/waveglow-tensorflow2/data/float16/"
 # Log directory for tf.summary and tensorboard
-hparams['log_dir'] = "/home/jupyter/waveglowTensorflow2/logs/"
+hparams['log_dir'] = "/home/jupyter/waveglow-tensorflow2/logs/"
 # Checkpoint directory to save and restore model
-hparams['checkpoint_dir'] = "/home/jupyter/waveglowTensorflow2/checkpoints/" 
+hparams['checkpoint_dir'] = "/home/jupyter/waveglow-tensorflow2/checkpoints/" 
 
 
 # In[ ]:
@@ -141,6 +143,5 @@ hparams['checkpoint_dir'] = "/home/jupyter/waveglowTensorflow2/checkpoints/"
 
 # Legacy or Not implemented
 # Not sure if it is used anywhere, I think it is equivalent the number of channels in Wavenet
-# hparams["hidden_channels"] = 256
 # hparams['train_steps'] = 100  # Not implemented
 

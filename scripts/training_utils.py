@@ -130,7 +130,7 @@ def get_optimizer(hparams):
     
   if hparams["ftype"] == tf.float16:
     return tf.keras.mixed_precision.experimental.LossScaleOptimizer(
-      optimizer, loss_scale=hparams['loss_scale'])
+      optimizer, "dynamic")
   else:
     return optimizer
 

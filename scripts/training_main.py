@@ -12,13 +12,14 @@ import tensorflow as tf
 print("GPU Available: ", tf.test.is_gpu_available())
 
 
-# In[2]:
+# In[ ]:
 
 
 tf.keras.backend.clear_session()
+tf.keras.backend.set_floatx('float16')
 
 
-# In[3]:
+# In[ ]:
 
 
 import os, sys
@@ -28,7 +29,7 @@ sys.path.append(script_dir)
 from datetime import datetime
 
 
-# In[4]:
+# In[ ]:
 
 
 from hparams import hparams
@@ -38,35 +39,35 @@ import training_utils as utils
 
 # ## Tensorboard logs setup
 
-# In[5]:
+# In[ ]:
 
 
-log_dir = hparams['log_dir'] + 'test/weight_norm'
+log_dir = os.path.join(hparams['log_dir'], 'test', 'weight_norm_float16')
 file_writer = tf.summary.create_file_writer(log_dir)
 file_writer.set_as_default()
 
 
 # ## Load Validation and Training Dataset
 
-# In[6]:
+# In[ ]:
 
 
 validation_dataset = utils.load_single_file_tfrecords(
-  record_file=hparams['tfrecords_dir'] + hparams['eval_file'])
+  record_file=os.path.join(hparams['tfrecords_dir'], hparams['eval_file']))
 validation_dataset = validation_dataset.batch(
   hparams['train_batch_size'])
 
 
-# In[7]:
+# In[ ]:
 
 
 training_dataset = utils.load_training_files_tfrecords(
-  record_pattern=hparams['tfrecords_dir'] + hparams['train_files'] + '*')
+  record_pattern=os.path.join(hparams['tfrecords_dir'], hparams['train_files'] + '*'))
 
 
 # ## Instantiate model and optimizer
 
-# In[8]:
+# In[ ]:
 
 
 myWaveGlow = WaveGlow(hparams=hparams, name='myWaveGlow')
@@ -76,7 +77,7 @@ optimizer = utils.get_optimizer(hparams=hparams)
 
 # ## Model Checkpoints : Initialise or Restore
 
-# In[9]:
+# In[ ]:
 
 
 checkpoint = tf.train.Checkpoint(step=tf.Variable(0), 
@@ -85,7 +86,7 @@ checkpoint = tf.train.Checkpoint(step=tf.Variable(0),
 
 manager_checkpoint = tf.train.CheckpointManager(
   checkpoint, 
-  directory=hparams['checkpoint_dir'] + "test/weight_norm",
+  directory=os.path.join(hparams['checkpoint_dir'], "test", "weight_norm"),
   max_to_keep=hparams['max_to_keep'])
 
 checkpoint.restore(manager_checkpoint.latest_checkpoint)
@@ -103,7 +104,7 @@ else:
 
 # ## Training step autograph
 
-# In[10]:
+# In[ ]:
 
 
 @tf.function
@@ -119,7 +120,7 @@ def train_step(step, x_train, waveGlow, hparams, optimizer):
                                 myWaveGlow.trainable_weights))
 
 
-# In[11]:
+# In[ ]:
 
 
 def custom_training(waveGlow, hparams, optimizer, 

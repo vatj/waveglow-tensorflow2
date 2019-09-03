@@ -429,7 +429,7 @@ class WeightNormalization(tf.keras.layers.Wrapper):
                 range(self.layer.kernel.shape.rank - 1))
 
             self.v = self.layer.kernel
-            self.g = self.add_variable(
+            self.g = self.add_weight(
                 name="g",
                 shape=(self.layer_depth,),
                 initializer=tf.keras.initializers.get('ones'),
@@ -531,7 +531,7 @@ class Inv1x1ConvWeightNorm(layers.Conv1D):
     self.kernel_norm_axes = [0, 1]
       
     self.v = self.kernel
-    self.g = self.add_variable(
+    self.g = self.add_weight(
         name="g",
         shape=self.layer_depth,
         initializer=tf.keras.initializers.get('ones'),
