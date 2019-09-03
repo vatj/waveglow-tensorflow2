@@ -3,13 +3,13 @@
 
 # # Hyperparameter dictionary
 
-# In[2]:
+# In[ ]:
 
 
 import tensorflow as tf
 
 
-# In[3]:
+# In[ ]:
 
 
 hparams = dict()
@@ -17,7 +17,7 @@ hparams = dict()
 
 # ## Waveglow parameters
 
-# In[4]:
+# In[ ]:
 
 
 # Number of flow blocks/composite layers in the model. Each flow is Invertible Convolution + Affine Coupling Layer to Wavenet
@@ -38,7 +38,7 @@ hparams["hidden_channels"] = 256
 
 # ## Wavenet Parameters
 
-# In[5]:
+# In[ ]:
 
 
 # Number of composite layer in Wavenet acting first with separate Conv1D on audio and spectrogram
@@ -55,7 +55,7 @@ hparams['n_in_channels'] = 4
 
 # ## Preprocessing of audio samples from LJSpeech
 
-# In[6]:
+# In[ ]:
 
 
 # Window of the short-time Fourier transform
@@ -75,11 +75,11 @@ hparams['fmax'] = 8000.0
 
 # ## Machinery Details
 
-# In[7]:
+# In[ ]:
 
 
 # Floating precision. Float16 is not supported on cpus
-hparams['ftype'] = tf.float16
+hparams['ftype'] = tf.float32
 # Batch size for training
 hparams['train_batch_size'] = 12
 # Learning rate, set to range(1e-3, 1e-4) for Adam and 1.0 for AdaDelta. Learning rate scheduler not supported yet
@@ -87,7 +87,7 @@ hparams['learning_rate'] = 3e-4
 # Number of epochs to iterate over. Might be replaced by a number of training step in the future
 hparams['epochs'] = 10
 # Buffer size for shuffling
-hparams['buffer_size'] = 24
+hparams['buffer_size'] = 12
 # Optimizer, either Adam or AdaDelta. If AdaDelta, learning_rate = 1.0. 
 # Added experimental tensorflow wrapper to support tf.float16
 hparams['optimizer'] = "Adam" 
@@ -97,9 +97,9 @@ hparams['optimizer'] = "Adam"
 
 
 # Save model every number of step
-hparams['save_model_every'] = 100
+hparams['save_model_every'] = 500
 # Save audio samples every number of step
-hparams['save_audio_every'] = 200
+hparams['save_audio_every'] = 1000
 # Number of checkpoint files to keep
 hparams['max_to_keep'] = 3 
 
@@ -125,17 +125,17 @@ hparams['test_file'] = 'ljs_test.tfrecords'
 
 # ## Path
 
-# In[8]:
+# In[ ]:
 
 
 # Raw data directory
 hparams['data_dir'] = "/home/jupyter/.keras/datasets/LJSpeech-1.1"
 # Tfrecords directory. Use different directories for float32 and float16 to avoid rerun of preprocessing
-hparams['tfrecords_dir'] = "/home/jupyter/waveglow-tensorflow2/data/float16/"
+hparams['tfrecords_dir'] = "/home/jupyter/waveglow-tensorflow2/data/float32/"
 # Log directory for tf.summary and tensorboard
-hparams['log_dir'] = "/home/jupyter/waveglow-tensorflow2/logs/"
+hparams['log_dir'] = "/home/jupyter/waveglow-tensorflow2/logs/test/weight_norm_float32f"
 # Checkpoint directory to save and restore model
-hparams['checkpoint_dir'] = "/home/jupyter/waveglow-tensorflow2/checkpoints/" 
+hparams['checkpoint_dir'] = "/home/jupyter/waveglow-tensorflow2/checkpoints/test/weight_norm_float32f" 
 
 
 # In[ ]:

@@ -129,7 +129,7 @@ def get_optimizer(hparams):
     raise "Supported Optimizer is either Adam or Adagrad"
     
   if hparams["ftype"] == tf.float16:
-    return tf.keras.mixed_precision.experimental.LossScaleOptimizer(
+    return tf.train.experimental.enable_mixed_precision_graph_rewrite(
       optimizer, "dynamic")
   else:
     return optimizer

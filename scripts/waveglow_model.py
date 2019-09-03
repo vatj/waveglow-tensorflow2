@@ -68,17 +68,17 @@ class WaveGlow(tf.keras.Model):
         n_half -= self.n_early_size // 2
         n_remaining_channels -= self.n_early_size
         
-      self.convinvLayers.append(
-        Invertible1x1Conv(
-          filters=n_remaining_channels,
-          dtype=hparams['ftype'],
-          name="inv1x1conv_{}".format(index)))
+#       self.convinvLayers.append(
+#         Invertible1x1Conv(
+#           filters=n_remaining_channels,
+#           dtype=hparams['ftype'],
+#           name="inv1x1conv_{}".format(index)))
       
-      self.inv1x1ConvLayers.append(
-          Inv1x1Conv(
-            filters=n_remaining_channels,
-            dtype=hparams['ftype'],
-            name="newInv1x1conv_{}".format(index)))
+#       self.inv1x1ConvLayers.append(
+#           Inv1x1Conv(
+#             filters=n_remaining_channels,
+#             dtype=hparams['ftype'],
+#             name="newInv1x1conv_{}".format(index)))
       
       self.weightNormInv1x1ConvLayers.append(
         Inv1x1ConvWeightNorm(
@@ -86,8 +86,8 @@ class WaveGlow(tf.keras.Model):
           dtype=hparams["ftype"],
           name="weightInv1x1conv_{}".format(index)))
       
-      self.batchNormalisationLayers.append(
-        layers.BatchNormalization())
+#       self.batchNormalisationLayers.append(
+#         layers.BatchNormalization())
       
       self.waveNetAffineBlocks.append(
         WaveNetAffineBlock(n_in_channels=n_half, 
@@ -199,7 +199,8 @@ class WaveGlow(tf.keras.Model):
                                                training=False)
       
       # audio = self.convinvLayers[index](audio, training=False)
-      audio = self.inv1x1ConvLayers[index](audio, training=False)
+      # audio = self.inv1x1ConvLayers[index](audio, training=False)
+      audio = self.weightNormInv1x1ConvLayers[index](audio, training=False)
       
       if ((index % self.n_early_every == 0) and (index > 0)):
         z = tf.random.normal(
