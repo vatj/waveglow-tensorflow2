@@ -14,6 +14,7 @@ import os, sys
 root_dir, _ = os.path.split(os.getcwd())
 script_dir = os.path.join(root_dir, 'scripts')
 sys.path.append(script_dir)
+sys.path.append('home/phd/miniconda3/')
 from hparams import hparams
 
 
@@ -41,10 +42,10 @@ notebook.list()
 log_dir, __ = os.path.split(hparams['log_dir'])
 
 
-# In[7]:
+# In[ ]:
 
 
-get_ipython().run_line_magic('tensorboard', '--logdir $log_dir --port=6081')
+get_ipython().system('/home/phd/miniconda3/envs/tf2rc/bin/tensorboard --logdir $log_dir --port=6081')
 
 
 # In[ ]:

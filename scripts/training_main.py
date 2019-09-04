@@ -160,37 +160,18 @@ def custom_training(waveGlow, hparams, optimizer,
       checkpoint.step.assign_add(1)
 
 
-# In[12]:
+# In[ ]:
 
 
-for x_train in training_dataset.take(1):
-  test = myWaveGlow(x_train, training=True)
+custom_training(waveGlow=myWaveGlow, 
+                hparams=hparams, 
+                optimizer=optimizer,
+                checkpoint=checkpoint,
+                manager_checkpoint=manager_checkpoint)
 
 
-# In[13]:
+# In[ ]:
 
 
-blue = myWaveGlow.weightNormInv1x1ConvLayers[0]
 
-
-# In[14]:
-
-
-tf.math.accumulate_n([layer.losses[0] for layer in myWaveGlow.weightNormInv1x1ConvLayers])
-
-
-# In[15]:
-
-
-myWaveGlow.losses
-
-
-# In[16]:
-
-
-# custom_training(waveGlow=myWaveGlow, 
-#                 hparams=hparams, 
-#                 optimizer=optimizer,
-#                 checkpoint=checkpoint,
-#                 manager_checkpoint=manager_checkpoint)
 

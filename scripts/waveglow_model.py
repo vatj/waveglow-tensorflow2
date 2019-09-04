@@ -22,8 +22,7 @@ sys.path.append(script_dir)
 
 
 from hparams import hparams
-from custom_layers import Invertible1x1Conv, WaveNetAffineBlock
-from custom_layers import Inv1x1Conv, Inv1x1ConvWeightNorm
+from custom_layers import Inv1x1Conv, WaveNetAffineBlock
 
 
 # In[ ]:
@@ -54,7 +53,6 @@ class WaveGlow(tf.keras.Model):
 
     self.waveNetAffineBlocks = []
     self.weightNormInv1x1ConvLayers = []
-    self.batchNormalisationLayers = []
     
     self.upsampling = layers.UpSampling1D(size=self.upsampling_size)
       
@@ -66,46 +64,14 @@ class WaveGlow(tf.keras.Model):
         n_half -= self.n_early_size // 2
         n_remaining_channels -= self.n_early_size
         
-#       self.convinvLayers.append(
-#         Invertible1x1Conv(
-#           filters=n_remaining_channels,
-#           dtype=hparams['ftype'],
-#           name="inv1x1conv_{}".format(index)))
-      
+    
       self.weightNormInv1x1ConvLayers.append(
-        Inv1x1Conv(
-          filters=n_remaining_channels,
-          dtype=hparams['ftype'],
-          name="newInv1x1conv_{}".format(index)))
-    
-#       self.weightNormInv1x1ConvLayers.append(
-#         tfa.layers.wrappers.WeightNormalization(
-#           Inv1x1Conv(
-#             filters=n_remaining_channels,
-#             dtype=hparams['ftype'],
-#             name="newInv1x1conv_{}".format(index)),
-#           data_init=False))
-    
-#       self.weightNormInv1x1ConvLayers.append(
-#         tfa.layers.wrappers.WeightNormalization(
-#           layers.Conv1D(filters=n_remaining_channels,
-#                         kernel_size=1,
-#                         strides=1,
-#                         padding='SAME',
-#                         use_bias=False,
-#                         kernel_initializer=tf.initializers.orthogonal(),
-#                         activation="linear",
-#                         dtype=hparams['ftype'],
-#                         name="newInv1x1conv_{}".format(index))))
-      
-#       self.weightNormInv1x1ConvLayers.append(
-#         Inv1x1ConvWeightNorm(
-#           filters=n_remaining_channels,
-#           dtype=hparams["ftype"],
-#           name="weightInv1x1conv_{}".format(index)))
-      
-#       self.batchNormalisationLayers.append(
-#         layers.BatchNormalization())
+        tfa.layers.wrappers.WeightNormalization(
+          Inv1x1Conv(
+            filters=n_remaining_channels,
+            dtype=hparams['ftype'],
+            name="newInv1x1conv_{}".format(index)),
+          data_init=False))
       
       self.waveNetAffineBlocks.append(
         WaveNetAffineBlock(n_in_channels=n_half, 

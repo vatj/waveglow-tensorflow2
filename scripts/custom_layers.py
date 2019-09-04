@@ -31,70 +31,7 @@ from hparams import hparams
 
 # ## Invertible Convolution
 # 
-# The training boolean in the call method can be used to run the layer in reverse.
-# 
-# It could be worth investigating whether including the weight_norm wrapper of tensorflow addon can be used easily here and if it incurs significant improvements during training
-
-# In[ ]:
-
-
-class Invertible1x1Conv(layers.Layer):
-  """
-  Tensorflow 2.0 implementation of the inv1x1conv layer
-  """
-  
-  def __init__(self, filters, **kwargs):
-    super(Invertible1x1Conv, self).__init__(**kwargs)
-    self.kernel_size = filters
-    self.activation = tf.keras.activations.get("linear")
-    
-  def build(self, input_shape):
-    """This implementation assumes that the channel axis is last"""
-    self.kernel = self.add_weight(
-      shape=[1, self.filters, self.filters],
-      initializer=tf.initializers.orthogonal(),
-      trainable=True,
-      dtype=self.dtype,
-      name='kernel')
-    
-#   @tf.function  
-  def call(self, inputs, training=True):
-    """Training flag should be working now"""
-    
-    if training:
-      
-      # sign, log_det_weights = tf.linalg.slogdet(
-      #   tf.cast(self.W, tf.float32))
-      
-      log_det_weights = tf.math.log(tf.math.abs(tf.linalg.det(
-        tf.cast(self.kernel, tf.float32))))
-      loss = - tf.cast(tf.reduce_sum(log_det_weights), 
-                       dtype=self.dtype)
-      # sign, log_det_weights = tf.linalg.slogdet(self.W)
-  
-      # loss = - tf.reduce_sum(log_det_weights)
-      self.add_loss(loss)
-      tf.summary.scalar(name='loss',
-                       data=loss)
-         
-      output = tf.nn.conv1d(inputs, self.kernel, 
-                            stride=1, padding='SAME')
-    
-    else:
-      if not hasattr(self, 'kernel_inverse'):
-        self.kernel_inverse = tf.cast(tf.linalg.inv(
-          tf.cast(self.kernel, tf.float64)), dtype=self.dtype)
-        
-      return tf.nn.conv1d(inputs, self.kernel_inverse, 
-                            stride=1, padding='SAME')   
-  
-  def get_config(self):
-    config = super(Invertible1x1Conv, self).get_config()
-    config.update(kernel_size = self.kernel_size)
-    
-    return config
-      
-
+# The training boolean in the call method can be used to run the layer in reverse. This layer is wrapped in tensorflow-addons weight_norm layer in the waveglow initialisation call.
 
 # In[ ]:
 
@@ -186,12 +123,20 @@ class WaveNetNvidia(layers.Layer):
 
     for index in range(self.n_layers):
       dilation_rate = 2 ** index
-      in_layer = layers.Conv1D(filters=2 * self.n_channels,
+      # in_layer = layers.Conv1D(filters=2 * self.n_channels,
+                    # kernel_size= self.kernel_size,
+                    # dilation_rate=dilation_rate,
+                    # padding="SAME",
+                    # dtype=self.dtype,
+                    # name="conv1D_{}".format(index))
+      
+      in_layer = tfa.layers.wrappers.WeightNormalization(
+        layers.Conv1D(filters=2 * self.n_channels,
                     kernel_size= self.kernel_size,
                     dilation_rate=dilation_rate,
                     padding="SAME",
                     dtype=self.dtype,
-                    name="conv1D_{}".format(index))
+                    name="conv1D_{}".format(index)))
       # Nvidia has a weight_norm func here, training stability?
       # Not sure how to implement similar behaviour in tensorflow
       # See https://github.com/tensorflow/addons/blob/master/tensorflow_addons/layers/wrappers.py
