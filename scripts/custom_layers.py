@@ -6,7 +6,7 @@
 # ## Boilerplate
 # Start with standard imports as well as adding the scripts directory to the system path to allow custom imports.
 
-# In[1]:
+# In[ ]:
 
 
 import tensorflow as tf
@@ -14,7 +14,7 @@ from tensorflow.keras import layers
 import tensorflow_addons as tfa
 
 
-# In[2]:
+# In[ ]:
 
 
 import os, sys
@@ -23,7 +23,7 @@ script_dir = os.path.join(root_dir, 'scripts')
 sys.path.append(script_dir)
 
 
-# In[3]:
+# In[ ]:
 
 
 from hparams import hparams
@@ -187,11 +187,11 @@ class WaveNetNvidia(layers.Layer):
     for index in range(self.n_layers):
       dilation_rate = 2 ** index
       in_layer = layers.Conv1D(filters=2 * self.n_channels,
-                               kernel_size= self.kernel_size,
-                               dilation_rate=dilation_rate,
-                               padding="SAME",
-                               dtype=self.dtype,
-                               name="conv1D_{}".format(index))
+                    kernel_size= self.kernel_size,
+                    dilation_rate=dilation_rate,
+                    padding="SAME",
+                    dtype=self.dtype,
+                    name="conv1D_{}".format(index))
       # Nvidia has a weight_norm func here, training stability?
       # Not sure how to implement similar behaviour in tensorflow
       # See https://github.com/tensorflow/addons/blob/master/tensorflow_addons/layers/wrappers.py
@@ -368,7 +368,7 @@ class WaveNetAffineBlock(layers.Layer):
 
 # ## Custom Implementation of WeightNormalisedInvertible1x1Convolution
 
-# In[78]:
+# In[ ]:
 
 
 class Inv1x1ConvWeightNorm(layers.Conv1D):
@@ -385,9 +385,11 @@ class Inv1x1ConvWeightNorm(layers.Conv1D):
       activation="linear",
       **kwargs)
     self._initialized = False
+    self._kernel_updated = False
     
   def build(self, input_shape):
     super(Inv1x1ConvWeightNorm, self).build(input_shape)
+    self._kernel_updated = True
     
     self.layer_depth = self.filters
     self.kernel_norm_axes = [0, 1]
@@ -407,8 +409,10 @@ class Inv1x1ConvWeightNorm(layers.Conv1D):
   
   def call(self, inputs, training=True):
     if training:
+      g = tf.identity(self.g)
+      
       self.kernel = tf.nn.l2_normalize(
-        self.v, axis=self.kernel_norm_axes) * self.g
+        self.v, axis=self.kernel_norm_axes) * g
       
       sign, log_det_weights = tf.linalg.slogdet(
         tf.cast(self.kernel, tf.float32))
@@ -421,15 +425,11 @@ class Inv1x1ConvWeightNorm(layers.Conv1D):
       
     else:
       # if not hasattr(self, 'kernel_inverse'):
-      self.kernel_inverse = tf.cast(tf.linalg.inv(
-        tf.cast(self.kernel, tf.float32)), dtype=self.dtype)
+      if self._kernel_updated:
+        self.kernel_inverse = tf.cast(tf.linalg.inv(
+          tf.cast(self.kernel, tf.float32)), dtype=self.dtype)
+        self._kernel_updated = False
         
       return tf.nn.conv1d(inputs, self.kernel_inverse, 
                             stride=1, padding='SAME')
-
-
-# In[ ]:
-
-
-
 

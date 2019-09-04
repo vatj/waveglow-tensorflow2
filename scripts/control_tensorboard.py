@@ -29,19 +29,19 @@ get_ipython().run_line_magic('load_ext', 'tensorboard')
 from tensorboard import notebook
 
 
-# In[9]:
+# In[5]:
 
 
 notebook.list()
 
 
-# In[14]:
+# In[6]:
 
 
 log_dir, __ = os.path.split(hparams['log_dir'])
 
 
-# In[16]:
+# In[7]:
 
 
 get_ipython().run_line_magic('tensorboard', '--logdir $log_dir --port=6081')

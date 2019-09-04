@@ -53,8 +53,6 @@ class WaveGlow(tf.keras.Model):
     self.normalisation = self.hparams['train_batch_size'] * self.hparams['segment_length']
 
     self.waveNetAffineBlocks = []
-    self.convinvLayers = []
-    self.inv1x1ConvLayers = []
     self.weightNormInv1x1ConvLayers = []
     self.batchNormalisationLayers = []
     
@@ -74,17 +72,37 @@ class WaveGlow(tf.keras.Model):
 #           dtype=hparams['ftype'],
 #           name="inv1x1conv_{}".format(index)))
       
-#       self.inv1x1ConvLayers.append(
+      self.weightNormInv1x1ConvLayers.append(
+        Inv1x1Conv(
+          filters=n_remaining_channels,
+          dtype=hparams['ftype'],
+          name="newInv1x1conv_{}".format(index)))
+    
+#       self.weightNormInv1x1ConvLayers.append(
+#         tfa.layers.wrappers.WeightNormalization(
 #           Inv1x1Conv(
 #             filters=n_remaining_channels,
 #             dtype=hparams['ftype'],
-#             name="newInv1x1conv_{}".format(index)))
+#             name="newInv1x1conv_{}".format(index)),
+#           data_init=False))
+    
+#       self.weightNormInv1x1ConvLayers.append(
+#         tfa.layers.wrappers.WeightNormalization(
+#           layers.Conv1D(filters=n_remaining_channels,
+#                         kernel_size=1,
+#                         strides=1,
+#                         padding='SAME',
+#                         use_bias=False,
+#                         kernel_initializer=tf.initializers.orthogonal(),
+#                         activation="linear",
+#                         dtype=hparams['ftype'],
+#                         name="newInv1x1conv_{}".format(index))))
       
-      self.weightNormInv1x1ConvLayers.append(
-        Inv1x1ConvWeightNorm(
-          filters=n_remaining_channels,
-          dtype=hparams["ftype"],
-          name="weightInv1x1conv_{}".format(index)))
+#       self.weightNormInv1x1ConvLayers.append(
+#         Inv1x1ConvWeightNorm(
+#           filters=n_remaining_channels,
+#           dtype=hparams["ftype"],
+#           name="weightInv1x1conv_{}".format(index)))
       
 #       self.batchNormalisationLayers.append(
 #         layers.BatchNormalization())
@@ -154,7 +172,6 @@ class WaveGlow(tf.keras.Model):
       # No need to output log_det_W or log_s as added as loss in custom 
       # layers 
       # audio = self.convinvLayers[index](audio, training=True)
-      # audio = self.weightNormedInv1x1ConvLayers[index](audio)
       audio = self.weightNormInv1x1ConvLayers[index](audio)
       # audio = self.batchNormalisationLayers[index](audio, training=True)
       audio = self.waveNetAffineBlocks[index]((audio, spect),

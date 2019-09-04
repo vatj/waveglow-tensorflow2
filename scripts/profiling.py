@@ -9,6 +9,7 @@
 
 
 import tensorflow as tf
+from tensorflow.python.eager import profiler
 print("GPU Available: ", tf.test.is_gpu_available())
 
 
@@ -41,7 +42,7 @@ import training_utils as utils
 # In[5]:
 
 
-log_dir = hparams['log_dir'] + 'test/profiler'
+log_dir = hparams['log_dir']
 file_writer = tf.summary.create_file_writer(log_dir)
 file_writer.set_as_default()
 
@@ -85,7 +86,7 @@ checkpoint = tf.train.Checkpoint(step=tf.Variable(0),
 
 manager_checkpoint = tf.train.CheckpointManager(
   checkpoint, 
-  directory=hparams['checkpoint_dir'] + "test/weight_norm",
+  directory=hparams['checkpoint_dir'],
   max_to_keep=hparams['max_to_keep'])
 
 checkpoint.restore(manager_checkpoint.latest_checkpoint)
@@ -114,9 +115,9 @@ def train_step(step, x_train, waveGlow, hparams, optimizer):
     total_loss = waveGlow.total_loss(outputs=outputs)
 
   grads = tape.gradient(total_loss, 
-                        myWaveGlow.trainable_weights)
+                        waveGlow.trainable_weights)
   optimizer.apply_gradients(zip(grads, 
-                                myWaveGlow.trainable_weights))
+                                waveGlow.trainable_weights))
 
 
 # In[11]:
@@ -126,15 +127,15 @@ def custom_training(waveGlow, hparams, optimizer,
                     checkpoint, manager_checkpoint):
   step = tf.cast(checkpoint.step, tf.int64)
   
-  for epoch in tf.range(hparams['epochs']):
+  for epoch in tf.range(1):
     tf.summary.text(name='epoch',
                     data='Start epoch {}'.format(epoch.numpy()) +\
                     'at ' + datetime.now().strftime("%Y%m%d-%H%M%S"),
                     step=step)
     
-    for step, x_train in zip(tf.range(3), training_dataset):
-      if step == 2:
-        tf.python.eager.profiler.start()
+    for int_step, (step, x_train) in zip(range(50), training_dataset.enumerate(start=step)):
+      if int_step == 2:
+        profiler.start()
         
       train_step(step=step,
                  x_train=x_train,
@@ -152,13 +153,15 @@ def custom_training(waveGlow, hparams, optimizer,
         utils.eval_step(eval_dataset=validation_dataset,
                         waveGlow=waveGlow, hparams=hparams,
                         step=step)
-      if step == 2:
-        tf.python.eager.profiler.stop()
+      if int_step == 50:
+        profiler_result = profiler.stop()
+        profiler.save(hparams['log_dir'], profiler_result)
+        break
     
       checkpoint.step.assign_add(1)
 
 
-# In[ ]:
+# In[12]:
 
 
 custom_training(waveGlow=myWaveGlow, 

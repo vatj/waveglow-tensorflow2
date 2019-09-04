@@ -115,9 +115,15 @@ def train_step(step, x_train, waveGlow, hparams, optimizer):
     total_loss = waveGlow.total_loss(outputs=outputs)
 
   grads = tape.gradient(total_loss, 
-                        myWaveGlow.trainable_weights)
+                        waveGlow.trainable_weights)
   optimizer.apply_gradients(zip(grads, 
-                                myWaveGlow.trainable_weights))
+                                waveGlow.trainable_weights))
+  
+@tf.function
+def train_step_minimize(step, x_train, waveGlow, hparams, optimizer):
+  tf.summary.experimental.set_step(step=step)
+  lambda loss: waveGlow.total_loss(outputs=waveGlow(x_train, training=True))
+  optimizer.minimize(loss, waveGlow.trainable_weights)
 
 
 # In[11]:
@@ -154,18 +160,37 @@ def custom_training(waveGlow, hparams, optimizer,
       checkpoint.step.assign_add(1)
 
 
-# In[ ]:
+# In[12]:
 
 
-custom_training(waveGlow=myWaveGlow, 
-                hparams=hparams, 
-                optimizer=optimizer,
-                checkpoint=checkpoint,
-                manager_checkpoint=manager_checkpoint)
+for x_train in training_dataset.take(1):
+  test = myWaveGlow(x_train, training=True)
 
 
-# In[ ]:
+# In[13]:
 
 
+blue = myWaveGlow.weightNormInv1x1ConvLayers[0]
 
+
+# In[14]:
+
+
+tf.math.accumulate_n([layer.losses[0] for layer in myWaveGlow.weightNormInv1x1ConvLayers])
+
+
+# In[15]:
+
+
+myWaveGlow.losses
+
+
+# In[16]:
+
+
+# custom_training(waveGlow=myWaveGlow, 
+#                 hparams=hparams, 
+#                 optimizer=optimizer,
+#                 checkpoint=checkpoint,
+#                 manager_checkpoint=manager_checkpoint)
 

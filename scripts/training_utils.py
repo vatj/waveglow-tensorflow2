@@ -32,7 +32,7 @@ from hparams import hparams
 
 # ## Dataset loading
 
-# In[6]:
+# In[5]:
 
 
 sound_feature_description = {
@@ -47,7 +47,7 @@ def _parse_sound_function(example_proto):
   return x
 
 
-# In[7]:
+# In[6]:
 
 
 def load_single_file_tfrecords(record_file):
@@ -76,7 +76,7 @@ def load_training_files_tfrecords(record_pattern):
 
 # ## Validation Step
 
-# In[ ]:
+# In[7]:
 
 
 def eval_step(eval_dataset, waveGlow, hparams, step):
@@ -109,7 +109,7 @@ def eval_step(eval_dataset, waveGlow, hparams, step):
 
 # ## Optimizer compatibility with tf.float16
 
-# In[ ]:
+# In[8]:
 
 
 def get_optimizer(hparams):
