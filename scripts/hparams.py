@@ -81,25 +81,27 @@ hparams['fmax'] = 8000.0
 # Floating precision. Float16 is not supported on cpus
 hparams['ftype'] = tf.float32
 # Batch size for training
-hparams['train_batch_size'] = 2
+hparams['train_batch_size'] = 24
 # Learning rate, set to range(1e-3, 1e-4) for Adam and 1.0 for AdaDelta. Learning rate scheduler not supported yet
 hparams['learning_rate'] = 3e-4
 # Number of epochs to iterate over. Might be replaced by a number of training step in the future
-hparams['epochs'] = 10
+hparams['epochs'] = 200
 # Buffer size for shuffling
-hparams['buffer_size'] = 12
+hparams['buffer_size'] = 24
 # Optimizer, either Adam or AdaDelta. If AdaDelta, learning_rate = 1.0. 
 # Added experimental tensorflow wrapper to support tf.float16
 hparams['optimizer'] = "Adam" 
+# Enable mixed precision calculation
+hparams['mixed_precision'] = True
 
 
 # In[ ]:
 
 
 # Save model every number of step
-hparams['save_model_every'] = 10
+hparams['save_model_every'] = 250
 # Save audio samples every number of step
-hparams['save_audio_every'] = 5
+hparams['save_audio_every'] = 1000
 # Number of checkpoint files to keep
 hparams['max_to_keep'] = 3 
 
@@ -133,9 +135,9 @@ hparams['data_dir'] = "/home/phd/.keras/datasets/LJSpeech-1.1"
 # Tfrecords directory. Use different directories for float32 and float16 to avoid rerun of preprocessing
 hparams['tfrecords_dir'] = "/home/phd/Projects/waveglow-tensorflow2/data/float32/"
 # Log directory for tf.summary and tensorboard
-hparams['log_dir'] = "/home/phd/Projects/waveglow-tensorflow2/logs/test/weight_norm_float32b"
+hparams['log_dir'] = "/home/phd/Projects/waveglow-tensorflow2/logs/test/mixed_precision_day"
 # Checkpoint directory to save and restore model
-hparams['checkpoint_dir'] = "/home/phd/Projects/waveglow-tensorflow2/checkpoints/test/weight_norm_float32b" 
+hparams['checkpoint_dir'] = "/home/phd/Projects/waveglow-tensorflow2/checkpoints/test/mixed_precision_day" 
 
 
 # In[ ]:

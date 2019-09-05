@@ -38,7 +38,7 @@ class WaveGlow(tf.keras.Model):
   """
   
   def __init__(self, hparams, **kwargs):
-    super(WaveGlow, self).__init__(**kwargs)
+    super(WaveGlow, self).__init__(dtype=hparams['ftype'], **kwargs)
     
     assert(hparams['n_group'] % 2 == 0)
     self.n_flows = hparams['n_flows']
@@ -54,7 +54,8 @@ class WaveGlow(tf.keras.Model):
     self.waveNetAffineBlocks = []
     self.weightNormInv1x1ConvLayers = []
     
-    self.upsampling = layers.UpSampling1D(size=self.upsampling_size)
+    self.upsampling = layers.UpSampling1D(size=self.upsampling_size,
+                                          dtype=self.dtype)
       
     n_half = self.n_group // 2
     n_remaining_channels = self.n_group
@@ -71,7 +72,8 @@ class WaveGlow(tf.keras.Model):
             filters=n_remaining_channels,
             dtype=hparams['ftype'],
             name="newInv1x1conv_{}".format(index)),
-          data_init=False))
+          data_init=False,
+          dtype=hparams['ftype']))
       
       self.waveNetAffineBlocks.append(
         WaveNetAffineBlock(n_in_channels=n_half, 
@@ -100,21 +102,25 @@ class WaveGlow(tf.keras.Model):
     
     audio = layers.Reshape(
       target_shape = [self.hparams["segment_length"] // self.n_group,
-                      self.n_group]) (audio)
+                      self.n_group],
+      dtype=self.dtype) (audio)
     
     # No reshape happening here, but enforce well defined rank
     # for spect tensor which is required for upsampling layer
     spect = layers.Reshape(
-      target_shape = [63, self.mel_channels]) (spect)
+      target_shape = [63, self.mel_channels],
+      dtype=self.dtype) (spect)
     
     spect = self.upsampling(spect)
     
     spect = layers.Cropping1D(
-      cropping=(0, spect.shape[1] - hparams['segment_length'])) (spect)
+      cropping=(0, spect.shape[1] - hparams['segment_length']),
+      dtype=self.dtype) (spect)
 
     spect = layers.Reshape(
       [self.hparams["segment_length"] // self.n_group, 
-       self.mel_channels * self.n_group]) (spect)
+       self.mel_channels * self.n_group],
+      dtype=self.dtype) (spect)
     
     output_audio = []
     n_remaining_channels = self.n_group
@@ -123,13 +129,16 @@ class WaveGlow(tf.keras.Model):
       if ((index % self.n_early_every == 0) and (index > 0)):
         n_remaining_channels -= hparams['n_early_size']
         
-        audio = layers.Permute(dims=(2, 1)) (audio)
+        audio = layers.Permute(dims=(2, 1), dtype=self.dtype) (audio)
         output_chunk = layers.Cropping1D(
-          cropping=(0, n_remaining_channels)) (audio)
+          cropping=(0, n_remaining_channels),
+          dtype=self.dtype) (audio)
         audio = layers.Cropping1D(
-          cropping=(hparams['n_early_size'], 0)) (audio)
-        audio = layers.Permute(dims=(2, 1)) (audio)
-        output_chunk = layers.Permute(dims=(2, 1)) (output_chunk)
+          cropping=(hparams['n_early_size'], 0),
+          dtype=self.dtype) (audio)
+        audio = layers.Permute(dims=(2, 1), dtype=self.dtype) (audio)
+        output_chunk = layers.Permute(dims=(2, 1), 
+                                      dtype=self.dtype) (output_chunk)
         output_audio.append(output_chunk)
         
         # output_audio.append(audio[:, :, :self.n_early_size])
@@ -137,16 +146,14 @@ class WaveGlow(tf.keras.Model):
         
       # No need to output log_det_W or log_s as added as loss in custom 
       # layers 
-      # audio = self.convinvLayers[index](audio, training=True)
       audio = self.weightNormInv1x1ConvLayers[index](audio)
-      # audio = self.batchNormalisationLayers[index](audio, training=True)
       audio = self.waveNetAffineBlocks[index]((audio, spect),
                                               training=True)     
       
     output_audio.append(audio)
     self.custom_logging()
     
-    return layers.Concatenate(axis=2) (output_audio)
+    return layers.Concatenate(axis=2, dtype=self.dtype) (output_audio)
   
   def infer(self, spect, sigma=1.0):
     """
@@ -181,8 +188,6 @@ class WaveGlow(tf.keras.Model):
       audio = self.waveNetAffineBlocks[index] ((audio, spect),
                                                training=False)
       
-      # audio = self.convinvLayers[index](audio, training=False)
-      # audio = self.inv1x1ConvLayers[index](audio, training=False)
       audio = self.weightNormInv1x1ConvLayers[index](audio, training=False)
       
       if ((index % self.n_early_every == 0) and (index > 0)):

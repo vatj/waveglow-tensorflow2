@@ -47,7 +47,7 @@ def _parse_sound_function(example_proto):
   return x
 
 
-# In[6]:
+# In[ ]:
 
 
 def load_single_file_tfrecords(record_file):
@@ -68,7 +68,8 @@ def load_training_files_tfrecords(record_pattern):
   
   training_dataset = parsed_sound_dataset.shuffle(
     buffer_size=hparams['buffer_size']).batch(
-    hparams['train_batch_size']).prefetch(
+    hparams['train_batch_size'],
+    drop_remainder=True).prefetch(
     buffer_size=tf.data.experimental.AUTOTUNE)
   
   return training_dataset
@@ -126,9 +127,9 @@ def get_optimizer(hparams):
     optimizer = tf.keras.optimizers.Adadelta(
       learning_rate=hparams['learning_rate'])
   else:
-    raise "Supported Optimizer is either Adam or Adagrad"
+    raise ValueError("Supported Optimizer is either Adam or Adagrad")
     
-  if hparams["ftype"] == tf.float16:
+  if hparams["mixed_precision"]:
     return tf.train.experimental.enable_mixed_precision_graph_rewrite(
       optimizer, "dynamic")
   else:

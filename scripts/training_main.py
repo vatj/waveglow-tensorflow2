@@ -17,9 +17,26 @@ print("GPU Available: ", tf.test.is_gpu_available())
 
 tf.keras.backend.clear_session()
 # tf.keras.backend.set_floatx('float16')
+# tf.debugging.set_log_device_placement(True)
 
 
 # In[3]:
+
+
+gpus = tf.config.experimental.list_physical_devices('GPU')
+if gpus:
+  try:
+    # Currently, memory growth needs to be the same across GPUs
+    for gpu in gpus:
+      tf.config.experimental.set_memory_growth(gpu, True)
+    logical_gpus = tf.config.experimental.list_logical_devices('GPU')
+    print(len(gpus), "Physical GPUs,", len(logical_gpus), "Logical GPUs")
+  except RuntimeError as e:
+    # Memory growth must be set before GPUs have been initialized
+    print(e)
+
+
+# In[4]:
 
 
 import os, sys
@@ -29,7 +46,7 @@ sys.path.append(script_dir)
 from datetime import datetime
 
 
-# In[4]:
+# In[5]:
 
 
 from hparams import hparams
@@ -39,7 +56,7 @@ import training_utils as utils
 
 # ## Tensorboard logs setup
 
-# In[5]:
+# In[6]:
 
 
 log_dir = os.path.join(hparams['log_dir'])
@@ -49,7 +66,7 @@ file_writer.set_as_default()
 
 # ## Load Validation and Training Dataset
 
-# In[6]:
+# In[7]:
 
 
 validation_dataset = utils.load_single_file_tfrecords(
@@ -58,7 +75,7 @@ validation_dataset = validation_dataset.batch(
   hparams['train_batch_size'])
 
 
-# In[7]:
+# In[8]:
 
 
 training_dataset = utils.load_training_files_tfrecords(
@@ -67,7 +84,7 @@ training_dataset = utils.load_training_files_tfrecords(
 
 # ## Instantiate model and optimizer
 
-# In[8]:
+# In[9]:
 
 
 myWaveGlow = WaveGlow(hparams=hparams, name='myWaveGlow')
@@ -77,7 +94,7 @@ optimizer = utils.get_optimizer(hparams=hparams)
 
 # ## Model Checkpoints : Initialise or Restore
 
-# In[9]:
+# In[10]:
 
 
 checkpoint = tf.train.Checkpoint(step=tf.Variable(0), 
@@ -104,7 +121,7 @@ else:
 
 # ## Training step autograph
 
-# In[10]:
+# In[11]:
 
 
 @tf.function
@@ -122,11 +139,11 @@ def train_step(step, x_train, waveGlow, hparams, optimizer):
 @tf.function
 def train_step_minimize(step, x_train, waveGlow, hparams, optimizer):
   tf.summary.experimental.set_step(step=step)
-  lambda loss: waveGlow.total_loss(outputs=waveGlow(x_train, training=True))
+  loss = lambda : waveGlow.total_loss(outputs=waveGlow(x_train, training=True))
   optimizer.minimize(loss, waveGlow.trainable_weights)
 
 
-# In[11]:
+# In[12]:
 
 
 def custom_training(waveGlow, hparams, optimizer, 
@@ -168,6 +185,12 @@ custom_training(waveGlow=myWaveGlow,
                 optimizer=optimizer,
                 checkpoint=checkpoint,
                 manager_checkpoint=manager_checkpoint)
+
+
+# In[ ]:
+
+
+
 
 
 # In[ ]:

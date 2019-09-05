@@ -123,23 +123,16 @@ class WaveNetNvidia(layers.Layer):
 
     for index in range(self.n_layers):
       dilation_rate = 2 ** index
-      # in_layer = layers.Conv1D(filters=2 * self.n_channels,
-                    # kernel_size= self.kernel_size,
-                    # dilation_rate=dilation_rate,
-                    # padding="SAME",
-                    # dtype=self.dtype,
-                    # name="conv1D_{}".format(index))
-      
-      in_layer = tfa.layers.wrappers.WeightNormalization(
-        layers.Conv1D(filters=2 * self.n_channels,
+      in_layer = layers.Conv1D(filters=2 * self.n_channels,
                     kernel_size= self.kernel_size,
                     dilation_rate=dilation_rate,
                     padding="SAME",
                     dtype=self.dtype,
-                    name="conv1D_{}".format(index)))
+                    name="conv1D_{}".format(index))
+      
+     
       # Nvidia has a weight_norm func here, training stability?
-      # Not sure how to implement similar behaviour in tensorflow
-      # See https://github.com/tensorflow/addons/blob/master/tensorflow_addons/layers/wrappers.py
+      # Memory expensive in implementation of tf-addons wrapper
       self.in_layers.append(in_layer)
       
       
@@ -297,7 +290,9 @@ class WaveNetAffineBlock(layers.Layer):
     audio_1 = self.affine_coupling(
       (audio_1, wavenet_output), training=training)   
          
-    audio = layers.Concatenate(axis=2) ([audio_0, audio_1])
+    audio = layers.Concatenate(
+      axis=2, 
+      dtype=self.wavenet.dtype) ([audio_0, audio_1])
     
     return audio
   
