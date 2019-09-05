@@ -9,7 +9,7 @@
 import tensorflow as tf
 
 
-# In[ ]:
+# In[2]:
 
 
 hparams = dict()
@@ -17,7 +17,7 @@ hparams = dict()
 
 # ## Waveglow parameters
 
-# In[ ]:
+# In[3]:
 
 
 # Number of flow blocks/composite layers in the model. Each flow is Invertible Convolution + Affine Coupling Layer to Wavenet
@@ -38,7 +38,7 @@ hparams["hidden_channels"] = 256
 
 # ## Wavenet Parameters
 
-# In[ ]:
+# In[4]:
 
 
 # Number of composite layer in Wavenet acting first with separate Conv1D on audio and spectrogram
@@ -55,7 +55,7 @@ hparams['n_in_channels'] = 4
 
 # ## Preprocessing of audio samples from LJSpeech
 
-# In[ ]:
+# In[5]:
 
 
 # Window of the short-time Fourier transform
@@ -75,27 +75,27 @@ hparams['fmax'] = 8000.0
 
 # ## Machinery Details
 
-# In[ ]:
+# In[6]:
 
 
 # Floating precision. Float16 is not supported on cpus
 hparams['ftype'] = tf.float32
 # Batch size for training
-hparams['train_batch_size'] = 24
+hparams['train_batch_size'] = 12
 # Learning rate, set to range(1e-3, 1e-4) for Adam and 1.0 for AdaDelta. Learning rate scheduler not supported yet
 hparams['learning_rate'] = 3e-4
 # Number of epochs to iterate over. Might be replaced by a number of training step in the future
 hparams['epochs'] = 200
 # Buffer size for shuffling
-hparams['buffer_size'] = 24
+hparams['buffer_size'] = 240
 # Optimizer, either Adam or AdaDelta. If AdaDelta, learning_rate = 1.0. 
 # Added experimental tensorflow wrapper to support tf.float16
 hparams['optimizer'] = "Adam" 
 # Enable mixed precision calculation
-hparams['mixed_precision'] = True
+hparams['mixed_precision'] = False
 
 
-# In[ ]:
+# In[7]:
 
 
 # Save model every number of step
@@ -108,7 +108,7 @@ hparams['max_to_keep'] = 3
 
 # ## Generate tfrecords files
 
-# In[ ]:
+# In[8]:
 
 
 # Split training data in n_shards tfrecords files
@@ -127,7 +127,7 @@ hparams['test_file'] = 'ljs_test.tfrecords'
 
 # ## Path
 
-# In[ ]:
+# In[9]:
 
 
 # Raw data directory
@@ -135,12 +135,12 @@ hparams['data_dir'] = "/home/phd/.keras/datasets/LJSpeech-1.1"
 # Tfrecords directory. Use different directories for float32 and float16 to avoid rerun of preprocessing
 hparams['tfrecords_dir'] = "/home/phd/Projects/waveglow-tensorflow2/data/float32/"
 # Log directory for tf.summary and tensorboard
-hparams['log_dir'] = "/home/phd/Projects/waveglow-tensorflow2/logs/test/mixed_precision_day"
+hparams['log_dir'] = "/home/phd/Projects/waveglow-tensorflow2/logs/test/mixed_precision_false"
 # Checkpoint directory to save and restore model
-hparams['checkpoint_dir'] = "/home/phd/Projects/waveglow-tensorflow2/checkpoints/test/mixed_precision_day" 
+hparams['checkpoint_dir'] = "/home/phd/Projects/waveglow-tensorflow2/checkpoints/test/mixed_precision_false" 
 
 
-# In[ ]:
+# In[10]:
 
 
 # Legacy or Not implemented
