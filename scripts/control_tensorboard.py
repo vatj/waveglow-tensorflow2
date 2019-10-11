@@ -45,7 +45,7 @@ log_dir, __ = os.path.split(hparams['log_dir'])
 # In[ ]:
 
 
-get_ipython().system('/home/phd/miniconda3/envs/tf2rc/bin/tensorboard --logdir $log_dir --port=6081')
+get_ipython().system('/home/phd/miniconda3/envs/tf2rc/bin/tensorboard --logdir $log_dir --port=6058')
 
 
 # In[11]:
