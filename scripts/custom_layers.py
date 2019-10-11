@@ -172,7 +172,7 @@ class WaveNetNvidia(layers.Layer):
     
     for index in range(self.n_layers):
       in_layered = self.in_layers[index](started)
-      self.normalisation_layers[index](in_layered, training=True)
+      in_layered = self.normalisation_layers[index](in_layered, training=True)
       
       cond_layered = self.cond_layers[index](spect)
       

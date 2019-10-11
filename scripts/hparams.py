@@ -135,9 +135,9 @@ hparams['data_dir'] = "/home/victor/.keras/datasets/LJSpeech-1.1"
 # Tfrecords directory. Use different directories for float32 and float16 to avoid rerun of preprocessing
 hparams['tfrecords_dir'] = "/home/victor/Projects/Github/waveglow-tensorflow2/data/float32/"
 # Log directory for tf.summary and tensorboard
-hparams['log_dir'] = "/home/victor/Projects/Github/waveglow-tensorflow2/logs/float32/run1"
+hparams['log_dir'] = "/home/victor/Projects/Github/waveglow-tensorflow2/logs/float32/run3"
 # Checkpoint directory to save and restore model
-hparams['checkpoint_dir'] = "/home/victor/Projects/Github/waveglow-tensorflow2/checkpoints/float32/run1" 
+hparams['checkpoint_dir'] = "/home/victor/Projects/Github/waveglow-tensorflow2/checkpoints/float32/run3" 
 
 
 # In[10]:
