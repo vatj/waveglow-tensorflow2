@@ -6,7 +6,7 @@
 # ## Boilerplate
 # Start with standard imports as well as adding the scripts directory to the system path to allow custom imports.
 
-# In[ ]:
+# In[1]:
 
 
 import tensorflow as tf
@@ -105,6 +105,7 @@ class WaveNetNvidia(layers.Layer):
     self.kernel_size = kernel_size
     
     self.in_layers = []
+    self.normalisation_layers = []
     self.res_skip_layers = []
     self.cond_layers = []
     
@@ -130,6 +131,8 @@ class WaveNetNvidia(layers.Layer):
                     dtype=self.dtype,
                     name="conv1D_{}".format(index))
       
+      self.normalisation_layers.append(
+        layers.BatchNormalization())
      
       # Nvidia has a weight_norm func here, training stability?
       # Memory expensive in implementation of tf-addons wrapper
@@ -169,6 +172,8 @@ class WaveNetNvidia(layers.Layer):
     
     for index in range(self.n_layers):
       in_layered = self.in_layers[index](started)
+      self.normalisation_layers[index]()
+      
       cond_layered = self.cond_layers[index](spect)
       
       half_tanh, half_sigmoid = tf.split(

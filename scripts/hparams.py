@@ -131,19 +131,18 @@ hparams['test_file'] = 'ljs_test.tfrecords'
 
 
 # Raw data directory
-hparams['data_dir'] = "/home/phd/.keras/datasets/LJSpeech-1.1"
+hparams['data_dir'] = "/home/victor/.keras/datasets/LJSpeech-1.1"
 # Tfrecords directory. Use different directories for float32 and float16 to avoid rerun of preprocessing
-hparams['tfrecords_dir'] = "/home/phd/Projects/waveglow-tensorflow2/data/float32/"
+hparams['tfrecords_dir'] = "/home/victor/Projects/Github/waveglow-tensorflow2/data/float32/"
 # Log directory for tf.summary and tensorboard
-hparams['log_dir'] = "/home/phd/Projects/waveglow-tensorflow2/logs/test/mixed_precision_false"
+hparams['log_dir'] = "/home/victor/Projects/Github/waveglow-tensorflow2/logs/float32/run1"
 # Checkpoint directory to save and restore model
-hparams['checkpoint_dir'] = "/home/phd/Projects/waveglow-tensorflow2/checkpoints/test/mixed_precision_false" 
+hparams['checkpoint_dir'] = "/home/victor/Projects/Github/waveglow-tensorflow2/checkpoints/float32/run1" 
 
 
 # In[10]:
 
 
 # Legacy or Not implemented
-# Not sure if it is used anywhere, I think it is equivalent the number of channels in Wavenet
 # hparams['train_steps'] = 100  # Not implemented
 

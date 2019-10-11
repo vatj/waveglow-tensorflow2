@@ -18,12 +18,13 @@ print("GPU Available: ", tf.test.is_gpu_available())
 tf.keras.backend.clear_session()
 # tf.keras.backend.set_floatx('float16')
 # tf.debugging.set_log_device_placement(True)
+gpus = tf.config.experimental.list_physical_devices('GPU')
 
 
 # In[3]:
 
 
-gpus = tf.config.experimental.list_physical_devices('GPU')
+# Limit memory growth on GPU
 if gpus:
   try:
     # Currently, memory growth needs to be the same across GPUs
@@ -33,6 +34,20 @@ if gpus:
     print(len(gpus), "Physical GPUs,", len(logical_gpus), "Logical GPUs")
   except RuntimeError as e:
     # Memory growth must be set before GPUs have been initialized
+    print(e)
+
+
+# In[ ]:
+
+
+if gpus:
+  # Restrict TensorFlow to only use a single GPU
+  try:
+    tf.config.experimental.set_visible_devices(gpus[0], 'GPU')
+    logical_gpus = tf.config.experimental.list_logical_devices('GPU')
+    print(len(gpus), "Physical GPUs,", len(logical_gpus), "Logical GPU")
+  except RuntimeError as e:
+    # Visible devices must be set before GPUs have been initialized
     print(e)
 
 
