@@ -5,6 +5,16 @@
 
 # ## Boilerplate Import
 
+# In[ ]:
+
+
+import os, sys
+root_dir, _ = os.path.split(os.getcwd())
+script_dir = os.path.join(root_dir, 'scripts')
+sys.path.append(script_dir)
+os.environ['CUDA_VISIBLE_DEVICES'] = '1'
+
+
 # In[1]:
 
 
@@ -21,52 +31,13 @@ tf.keras.backend.clear_session()
 gpus = tf.config.experimental.list_physical_devices('GPU')
 
 
-# In[3]:
-
-
-# Limit memory growth on GPU
-if gpus:
-  try:
-    # Currently, memory growth needs to be the same across GPUs
-    for gpu in gpus:
-      tf.config.experimental.set_memory_growth(gpu, True)
-    logical_gpus = tf.config.experimental.list_logical_devices('GPU')
-    print(len(gpus), "Physical GPUs,", len(logical_gpus), "Logical GPUs")
-  except RuntimeError as e:
-    # Memory growth must be set before GPUs have been initialized
-    print(e)
-
-
-# In[ ]:
-
-
-if gpus:
-  # Restrict TensorFlow to only use a single GPU
-  try:
-    tf.config.experimental.set_visible_devices(gpus[0], 'GPU')
-    logical_gpus = tf.config.experimental.list_logical_devices('GPU')
-    print(len(gpus), "Physical GPUs,", len(logical_gpus), "Logical GPU")
-  except RuntimeError as e:
-    # Visible devices must be set before GPUs have been initialized
-    print(e)
-
-
-# In[4]:
-
-
-import os, sys
-root_dir, _ = os.path.split(os.getcwd())
-script_dir = os.path.join(root_dir, 'scripts')
-sys.path.append(script_dir)
-from datetime import datetime
-
-
 # In[5]:
 
 
 from hparams import hparams
 from waveglow_model import WaveGlow
 import training_utils as utils
+from datetime import datetime
 
 
 # ## Tensorboard logs setup

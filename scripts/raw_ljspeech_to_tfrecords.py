@@ -172,7 +172,7 @@ def single_tfrecords_writer(path_ds, record_file, n_samples, hparams):
 
 
 # Validation Samples
-record_file = hparams['tfrecords_dir'] + hparams['eval_file']
+record_file = os.path.join(hparams['tfrecords_dir'], hparams['eval_file'])
 sample = hparams['n_eval_samples']
 single_tfrecords_writer(path_ds, record_file, sample, hparams)
 
@@ -181,7 +181,7 @@ single_tfrecords_writer(path_ds, record_file, sample, hparams)
 
 
 # Test Samples
-record_file = hparams['tfrecords_dir'] + hparams['test_file']
+record_file = os.path.join(hparams['tfrecords_dir'], hparams['test_file'])
 sample = hparams['n_test_samples']
 single_tfrecords_writer(path_ds, record_file, sample, hparams)
 

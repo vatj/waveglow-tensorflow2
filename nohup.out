@@ -1,0 +1,66 @@
+Serving TensorBoard on localhost; to expose to the network, use a proxy or pass --bind_all
+TensorBoard 2.0.0 at http://localhost:6058/ (Press CTRL+C to quit)
+]0;IPython: Github/waveglow-tensorflow2Known TensorBoard instances:
+  - port 6007: logdir runs (started 8 days, 18:03:21 ago; pid 8920)
+  - port 6058: logdir /home/victor/Projects/Github/waveglow-tensorflow2/logs/float32 (started 20:50:53 ago; pid 37313)
+  - port 6058: logdir /home/victor/Projects/Github/waveglow-tensorflow2/logs/float32 (started 17:17:25 ago; pid 22664)
+  - port 6058: logdir /home/victor/Projects/Github/waveglow-tensorflow2/logs/float32 (started 15:09:01 ago; pid 33852)
+  - port 6006: logdir runs (started 9 days, 2:57:18 ago; pid 15054)
+  - port 6058: logdir /home/victor/Projects/Github/waveglow-tensorflow2/logs/float32 (started 5:58:39 ago; pid 37385)
+  - port 6006: logdir runs (started 36 days, 17:45:41 ago; pid 4144)
+
+KeyboardInterrupt
+
+Serving TensorBoard on localhost; to expose to the network, use a proxy or pass --bind_all
+TensorBoard 2.0.0 at http://localhost:6058/ (Press CTRL+C to quit)
+TensorBoard caught SIGTERM; exiting...
+]0;IPython: Github/waveglow-tensorflow2Known TensorBoard instances:
+  - port 6058: logdir /home/victor/Projects/Github/waveglow-tensorflow2/logs/float32 (started 0:00:11 ago; pid 2723)
+  - port 6007: logdir runs (started 8 days, 18:03:36 ago; pid 8920)
+  - port 6058: logdir /home/victor/Projects/Github/waveglow-tensorflow2/logs/float32 (started 20:51:08 ago; pid 37313)
+  - port 6058: logdir /home/victor/Projects/Github/waveglow-tensorflow2/logs/float32 (started 17:17:40 ago; pid 22664)
+  - port 6058: logdir /home/victor/Projects/Github/waveglow-tensorflow2/logs/float32 (started 15:09:16 ago; pid 33852)
+  - port 6006: logdir runs (started 9 days, 2:57:33 ago; pid 15054)
+  - port 6058: logdir /home/victor/Projects/Github/waveglow-tensorflow2/logs/float32 (started 5:58:54 ago; pid 37385)
+  - port 6006: logdir runs (started 36 days, 17:45:56 ago; pid 4144)
+]0;IPython: Github/waveglow-tensorflow2Known TensorBoard instances:
+  - port 6058: logdir /home/victor/Projects/Github/waveglow-tensorflow2/logs/float32 (started 18:10:05 ago; pid 2723)
+  - port 6007: logdir runs (started 9 days, 12:13:30 ago; pid 8920)
+  - port 6058: logdir /home/victor/Projects/Github/waveglow-tensorflow2/logs/float32 (started 1 day, 15:01:02 ago; pid 37313)
+  - port 6058: logdir /home/victor/Projects/Github/waveglow-tensorflow2/logs/float32 (started 1 day, 11:27:34 ago; pid 22664)
+  - port 6058: logdir /home/victor/Projects/Github/waveglow-tensorflow2/logs/float32 (started 1 day, 9:19:10 ago; pid 33852)
+  - port 6006: logdir runs (started 9 days, 21:07:27 ago; pid 15054)
+  - port 6058: logdir /home/victor/Projects/Github/waveglow-tensorflow2/logs/float32 (started 1 day, 0:08:48 ago; pid 37385)
+  - port 6006: logdir runs (started 37 days, 11:55:50 ago; pid 4144)
+
+KeyboardInterrupt
+
+Serving TensorBoard on localhost; to expose to the network, use a proxy or pass --bind_all
+TensorBoard 2.0.0 at http://localhost:6058/ (Press CTRL+C to quit)
+TensorBoard caught SIGTERM; exiting...
+]0;IPython: Github/waveglow-tensorflow2Known TensorBoard instances:
+  - port 6058: logdir /home/victor/Projects/Github/waveglow-tensorflow2/logs/float32 (started 18:10:12 ago; pid 2723)
+  - port 6007: logdir runs (started 9 days, 12:13:37 ago; pid 8920)
+  - port 6058: logdir /home/victor/Projects/Github/waveglow-tensorflow2/logs/float32 (started 1 day, 15:01:09 ago; pid 37313)
+  - port 6058: logdir /home/victor/Projects/Github/waveglow-tensorflow2/logs/float32 (started 1 day, 11:27:41 ago; pid 22664)
+  - port 6058: logdir /home/victor/Projects/Github/waveglow-tensorflow2/logs/float32 (started 1 day, 9:19:17 ago; pid 33852)
+  - port 6006: logdir runs (started 9 days, 21:07:34 ago; pid 15054)
+  - port 6058: logdir /home/victor/Projects/Github/waveglow-tensorflow2/logs/float32 (started 1 day, 0:08:55 ago; pid 37385)
+  - port 6006: logdir runs (started 37 days, 11:55:57 ago; pid 4144)
+Serving TensorBoard on localhost; to expose to the network, use a proxy or pass --bind_all
+TensorBoard 2.0.0 at http://localhost:6058/ (Press CTRL+C to quit)
+E1016 11:50:08.653150 140650509952768 directory_watcher.py:242] File /home/victor/Projects/Github/waveglow-tensorflow2/logs/float32/run2_batch12_Adam/events.out.tfevents.1570862893.austen-DGX-Station.38473.8.v2 updated even though the current file is /home/victor/Projects/Github/waveglow-tensorflow2/logs/float32/run2_batch12_Adam/events.out.tfevents.1571222999.austen-DGX-Station.31527.8.v2
+E1017 11:05:59.330076 139722191787840 program.py:226] TensorBoard could not bind to port 6058, it was already in use
+ERROR: TensorBoard could not bind to port 6058, it was already in use
+]0;IPython: Github/waveglow-tensorflow2Known TensorBoard instances:
+  - port 6058: logdir /home/victor/Projects/Github/waveglow-tensorflow2/logs/float32 (started 4 days, 21:31:34 ago; pid 2723)
+  - port 6001: logdir /home/victor/Projects/Github/waveglow-compression/logs/float32 (started 2 days, 19:21:55 ago; pid 4403)
+  - port 6007: logdir runs (started 13 days, 15:34:59 ago; pid 8920)
+  - port 6058: logdir /home/victor/Projects/Github/waveglow-tensorflow2/logs/float32 (started 5 days, 18:22:31 ago; pid 37313)
+  - port 6058: logdir /home/victor/Projects/Github/waveglow-tensorflow2/logs/float32 (started 5 days, 14:49:03 ago; pid 22664)
+  - port 6058: logdir /home/victor/Projects/Github/waveglow-tensorflow2/logs/float32 (started 5 days, 12:40:39 ago; pid 33852)
+  - port 6006: logdir runs (started 14 days, 0:28:56 ago; pid 15054)
+  - port 6001: logdir /home/victor/Projects/Github/waveglow-compression/logs/float32 (started 1 day, 22:07:25 ago; pid 6456)
+  - port 6058: logdir /home/victor/Projects/Github/waveglow-tensorflow2/logs/float32 (started 5 days, 3:30:17 ago; pid 37385)
+  - port 6006: logdir runs (started 41 days, 15:17:19 ago; pid 4144)
+  - port 6058: logdir /home/victor/Projects/Github/waveglow-tensorflow2/logs/float32 (started 2 days, 18:14:11 ago; pid 6676)

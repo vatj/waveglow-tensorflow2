@@ -3,13 +3,13 @@
 
 # # Hyperparameter dictionary
 
-# In[1]:
+# In[ ]:
 
 
 import tensorflow as tf
 
 
-# In[2]:
+# In[ ]:
 
 
 hparams = dict()
@@ -17,7 +17,7 @@ hparams = dict()
 
 # ## Waveglow parameters
 
-# In[3]:
+# In[ ]:
 
 
 # Number of flow blocks/composite layers in the model. Each flow is Invertible Convolution + Affine Coupling Layer to Wavenet
@@ -38,7 +38,7 @@ hparams["hidden_channels"] = 256
 
 # ## Wavenet Parameters
 
-# In[4]:
+# In[ ]:
 
 
 # Number of composite layer in Wavenet acting first with separate Conv1D on audio and spectrogram
@@ -55,7 +55,7 @@ hparams['n_in_channels'] = 4
 
 # ## Preprocessing of audio samples from LJSpeech
 
-# In[5]:
+# In[ ]:
 
 
 # Window of the short-time Fourier transform
@@ -75,7 +75,7 @@ hparams['fmax'] = 8000.0
 
 # ## Machinery Details
 
-# In[6]:
+# In[ ]:
 
 
 # Floating precision. Float16 is not supported on cpus
@@ -83,7 +83,7 @@ hparams['ftype'] = tf.float32
 # Batch size for training
 hparams['train_batch_size'] = 12
 # Learning rate, set to range(1e-3, 1e-4) for Adam and 1.0 for AdaDelta. Learning rate scheduler not supported yet
-hparams['learning_rate'] = 3e-4
+hparams['learning_rate'] = 1e-4
 # Number of epochs to iterate over. Might be replaced by a number of training step in the future
 hparams['epochs'] = 200
 # Buffer size for shuffling
@@ -95,7 +95,7 @@ hparams['optimizer'] = "Adam"
 hparams['mixed_precision'] = False
 
 
-# In[7]:
+# In[ ]:
 
 
 # Save model every number of step
@@ -108,7 +108,7 @@ hparams['max_to_keep'] = 3
 
 # ## Generate tfrecords files
 
-# In[8]:
+# In[ ]:
 
 
 # Split training data in n_shards tfrecords files
@@ -123,11 +123,13 @@ hparams['train_files'] = 'ljs_train'
 hparams['eval_file'] = 'ljs_eval.tfrecords'
 # Test tfrecords filename
 hparams['test_file'] = 'ljs_test.tfrecords'
+# Long Audio filename
+hparams['long_audio_file'] = 'ljs_long.tfrecords'
 
 
 # ## Path
 
-# In[9]:
+# In[ ]:
 
 
 # Raw data directory
@@ -135,12 +137,12 @@ hparams['data_dir'] = "/home/victor/.keras/datasets/LJSpeech-1.1"
 # Tfrecords directory. Use different directories for float32 and float16 to avoid rerun of preprocessing
 hparams['tfrecords_dir'] = "/home/victor/Projects/Github/waveglow-tensorflow2/data/float32/"
 # Log directory for tf.summary and tensorboard
-hparams['log_dir'] = "/home/victor/Projects/Github/waveglow-tensorflow2/logs/float32/run3"
+hparams['log_dir'] = "/home/victor/Projects/Github/waveglow-tensorflow2/logs/float32/run2_batch{train_batch_size}_{optimizer}".format(**hparams)
 # Checkpoint directory to save and restore model
-hparams['checkpoint_dir'] = "/home/victor/Projects/Github/waveglow-tensorflow2/checkpoints/float32/run3" 
+hparams['checkpoint_dir'] = "/home/victor/Projects/Github/waveglow-tensorflow2/checkpoints/float32/run2_batch{train_batch_size}_{optimizer}".format(**hparams) 
 
 
-# In[10]:
+# In[ ]:
 
 
 # Legacy or Not implemented

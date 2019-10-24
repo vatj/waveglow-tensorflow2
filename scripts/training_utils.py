@@ -36,14 +36,29 @@ from hparams import hparams
 
 
 sound_feature_description = {
-    "wav": tf.io.FixedLenFeature([], tf.string),
-    "mel": tf.io.FixedLenFeature([], tf.string)
+  "wav": tf.io.FixedLenFeature([], tf.string),
+  "mel": tf.io.FixedLenFeature([], tf.string)
 }
 
 def _parse_sound_function(example_proto):
   x = tf.io.parse_single_example(example_proto, sound_feature_description)
   x['wav'] = tf.io.parse_tensor(x['wav'], out_type=hparams['ftype'])
   x['mel'] = tf.io.parse_tensor(x['mel'], out_type=hparams['ftype'])  
+  return x
+
+long_sound_feature_description = {
+  "wav": tf.io.FixedLenFeature([], tf.string),
+  "mel": tf.io.FixedLenFeature([], tf.string),
+  "path": tf.io.FixedLenFeature([], tf.string),
+  "number_of_slices": tf.io.FixedLenFeature([], tf.string)
+}
+
+def _parse_long_sound_function(example_proto):
+  x = tf.io.parse_single_example(example_proto, long_sound_feature_description)
+  x['wav'] = tf.io.parse_tensor(x['wav'], out_type=hparams['ftype'])
+  x['mel'] = tf.io.parse_tensor(x['mel'], out_type=hparams['ftype'])
+  x['path'] = tf.io.parse_tensor(x['path'], out_type=tf.string)
+  x['number_of_slices'] = tf.io.parse_tensor(x['number_of_slices'], out_type=tf.int32)  
   return x
 
 
@@ -53,6 +68,11 @@ def _parse_sound_function(example_proto):
 def load_single_file_tfrecords(record_file):
   raw_sound_dataset = tf.data.TFRecordDataset(record_file)
   parsed_sound_dataset = raw_sound_dataset.map(_parse_sound_function)
+  return parsed_sound_dataset
+
+def load_long_audio_tfrecords(record_file):
+  raw_sound_dataset = tf.data.TFRecordDataset(record_file)
+  parsed_sound_dataset = raw_sound_dataset.map(_parse_long_sound_function)
   return parsed_sound_dataset
 
 def load_training_files_tfrecords(record_pattern):

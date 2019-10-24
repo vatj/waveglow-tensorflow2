@@ -168,7 +168,8 @@ class WaveNetNvidia(layers.Layer):
     """
     audio_0, spect = inputs
     
-    started = self.start (audio_0)   
+    started = self.start (audio_0)
+    
     
     for index in range(self.n_layers):
       in_layered = self.in_layers[index](started)
